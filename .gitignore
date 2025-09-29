@@ -1,3 +1,3 @@
 {
-  "updated_gitignore": "# Python bytecode\n__pycache__/\n*.pyc\n\n# Virtual Environment\nvenv/\n.venv/\n\n# Environment variables\n.env\n\n# Build artifacts\nbuild/\ndist/\n*.egg-info/\n\n# IDE specific files\n.vscode/\n.idea/\n\n# Testing\n.pytest_cache/\n.coverage\nhtmlcov/\n.mypy_cache/\n.tox/\n\n# OS-specific files\n.DS_Store\n\n# Log files\n*.log"
+  "updated_gitignore": "# Python bytecode\n__pycache__/\n*.pyc\n\n# Virtual Environment\nvenv/\n.venv/\nenv/\n\n# Environment variables\n.env\n.env.local\n\n# Build artifacts\nbuild/\ndist/\n*.egg-info/\n\n# IDE specific files\n.vscode/\n.idea/\n\n# Testing\n.pytest_cache/\n.coverage\nhtmlcov/\n.mypy_cache/\n.tox/\n\n# OS-specific files\n.DS_Store\n\n# Log files\n*.log"
 }

@@ -314,3 +314,13 @@ class CrossChainBridgeListener:
 if __name__ == '__main__':
     listener = CrossChainBridgeListener(CONFIG)
     listener.run()
+
+# @-internal-utility-start
+def validate_payload_5910(payload: dict):
+    """Validates incoming data payload on 2025-11-03 13:47:29"""
+    if not isinstance(payload, dict):
+        return False
+    required_keys = ['id', 'timestamp', 'data']
+    return all(key in payload for key in required_keys)
+# @-internal-utility-end
+

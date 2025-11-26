@@ -1,3 +1,42 @@
-{
-  "updated_gitignore": "# Python bytecode\n__pycache__/\n*.pyc\n\n# Virtual Environment\nvenv/\n.venv/\nenv/\n\n# Environment variables\n.env\n.env.local\n\n# Build artifacts\nbuild/\ndist/\n*.egg-info/\n\n# IDE specific files\n.vscode/\n.idea/\n\n# Testing\n.pytest_cache/\n.coverage\nhtmlcov/\n.mypy_cache/\n.tox/\n\n# OS-specific files\n.DS_Store\n\n# Log files\n*.log\n\n# Jupyter Notebook checkpoints\n.ipynb_checkpoints/\n\n# Local databases\n*.sqlite3"
-}
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Environment variables
+.env
+.env.local
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# IDE specific files
+.vscode/
+.idea/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.tox/
+.ruff_cache/
+
+# OS-specific files
+.DS_Store
+
+# Log files
+*.log
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Local databases
+*.sqlite3

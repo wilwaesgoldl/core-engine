@@ -20,6 +20,7 @@ dist/
 # IDE specific files
 .vscode/
 .idea/
+*.swp
 
 # Testing
 .pytest_cache/
@@ -31,6 +32,7 @@ htmlcov/
 
 # OS-specific files
 .DS_Store
+Thumbs.db
 
 # Log files
 *.log

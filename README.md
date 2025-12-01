@@ -1,10 +1,11 @@
 # Core Engine: Cross-Chain Bridge Event Listener
 
-This repository contains a Python-based simulation of a core component for a cross-chain bridge: the Event Listener and Relayer. It is designed to monitor events on a source blockchain (e.g., Ethereum) and trigger corresponding actions on a destination blockchain (e.g., Polygon).
+This project is a Python-based simulation of a core component for a cross-chain bridge: the Event Listener and Relayer. It is designed to monitor events on a source blockchain (e.g., Ethereum) and trigger corresponding actions on a destination blockchain (e.g., Polygon).
 
 ## Concept
 
 A cross-chain bridge allows users to transfer assets or data from one blockchain to another. A common mechanism is the "lock-and-mint" model:
+
 1.  **Lock**: A user locks their tokens in a smart contract on the source chain.
 2.  **Event Emission**: The source chain contract emits an event (`TokensLocked`) containing details of the deposit.
 3.  **Relay**: An off-chain service, the **Event Listener** (or Relayer), detects this event.
@@ -15,13 +16,13 @@ This script simulates the critical off-chain **Event Listener/Relayer** componen
 
 ## Code Architecture
 
-The script is designed with a modular, object-oriented architecture to promote separation of concerns and maintainability.
+The script uses a modular, object-oriented architecture to promote separation of concerns and maintainability.
 
 -   `CrossChainBridgeListener`: The main orchestrator class. It manages the application's lifecycle, state (like the last block processed), and the primary event-polling loop.
 
 -   `ChainConnector`: A robust wrapper around the `web3.py` library. It handles all direct interactions with a blockchain, such as establishing a connection to an RPC node, fetching the latest block number, and querying for smart contract events. It includes basic connection retry logic.
 
--   `RelayerEventHandler`: This class contains the core business logic. When the `CrossChainBridgeListener` finds a relevant event, it passes it to the `EventHandler`. This handler is responsible for parsing the event data, fetching external information (like gas prices via the `requests` library), constructing the corresponding `mint` transaction for the destination chain, and (in this simulation) printing it.
+-   `RelayerEventHandler`: This class contains the core business logic. When the `CrossChainBridgeListener` finds a relevant event, it passes the event to this handler. The handler is responsible for parsing the event data, fetching external information (like gas prices via the `requests` library), constructing the corresponding `mint` transaction for the destination chain, and (in this simulation) printing it.
 
 -   **Configuration (`CONFIG` dict)**: A centralized dictionary holds all necessary parameters, such as RPC URLs, contract addresses, and API endpoints. In a production environment, this would be managed through environment variables or a secure configuration service.
 
@@ -29,17 +30,17 @@ The script is designed with a modular, object-oriented architecture to promote s
 
 ## How it Works
 
-The listener operates in a continuous loop with the following steps:
+The listener operates in a continuous loop, performing the following steps:
 
 1.  **Initialization**: The `CrossChainBridgeListener` is instantiated. It sets up logging, initializes `ChainConnector` instances for both the source and destination chains, and prepares the `RelayerEventHandler`.
 
-2.  **Get Block Range**: In each loop iteration, the listener asks the source chain for its latest block number. It then defines a block range to scan, starting from the `last_processed_block + 1` up to the current head (or a configured limit to avoid overwhelming the RPC node).
+2.  **Get Block Range**: In each loop iteration, the listener gets the latest block number from the source chain. It then defines a block range to scan, starting from `last_processed_block + 1` up to the current head (or a configured limit to avoid overwhelming the RPC node).
 
 3.  **Event Query**: It uses the `source_connector` to query the defined block range for any `TokensLocked` events from the source bridge contract.
 
-4.  **Event Processing**: 
+4.  **Event Processing**:
     - If events are found, it iterates through them.
-    - For each event, it checks a unique identifier (the `transactionNonce`) against its internal set of `processed_tx_nonces` to prevent duplicate processing.
+    - For each event, it checks a unique nonce from the event data against its internal set of `processed_tx_nonces` to prevent duplicate processing.
     - If the event is new, it is passed to the `RelayerEventHandler`.
 
 5.  **Transaction Preparation (Simulation)**:
@@ -52,7 +53,9 @@ The listener operates in a continuous loop with the following steps:
 
 7.  **Wait**: The listener then pauses for a configured interval (`run_interval_seconds`) before starting the loop again.
 
-## Usage Example
+## Usage
+
+To run the simulation, follow these steps:
 
 1.  **Install dependencies:**
     ```bash
@@ -60,7 +63,7 @@ The listener operates in a continuous loop with the following steps:
     ```
 
 2.  **Configure the script:**
-    Open `script.py` and modify the `CONFIG` dictionary with your desired RPC endpoints and contract addresses. You must also provide a `relayer_wallet` address.
+    Open `script.py` and modify the `CONFIG` dictionary with your desired RPC endpoints, contract addresses, and relayer wallet address.
 
     ```python
     # In script.py
@@ -68,14 +71,14 @@ The listener operates in a continuous loop with the following steps:
         "source_chain": {
             "name": "Ethereum_Sepolia",
             "rpc_url": "https://rpc.sepolia.org",
-            "contract_address": "0x...", # Your source bridge contract
+            "contract_address": "0x...", # Your source bridge contract address
             ...
         },
         "destination_chain": {
             "name": "Polygon_Mumbai",
             "rpc_url": "https://rpc-mumbai.maticvigil.com",
-            "contract_address": "0x...", # Your destination bridge contract
-            "relayer_wallet": "0xYourWalletAddress",
+            "contract_address": "0x...", # Your destination bridge contract address
+            "relayer_wallet": "0xYourRelayerWalletAddress", # The address that will send the mint transaction
             ...
         },
         ...
@@ -89,7 +92,7 @@ The listener operates in a continuous loop with the following steps:
 
 ### Sample Output
 
-The console will show detailed logs of the listener's activity.
+The console will show detailed logs of the listener's activity, similar to the following:
 
 ```
 2023-10-27 10:30:00,123 - [INFO] - Logger initialized.
@@ -111,7 +114,7 @@ The console will show detailed logs of the listener's activity.
   "maxFeePerGas": 35000000000,
   "maxPriorityFeePerGas": 30000000000,
   "gas": 200000,
-  "to": "0x8a9C28b8686d128340E7420492F6A3d596a7353A",
+  "to": "0x...",
   "data": "0x... (encoded mint function call)"
 }
 -------------------------------------------

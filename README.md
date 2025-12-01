@@ -12,7 +12,7 @@ A cross-chain bridge allows users to transfer assets or data from one blockchain
 4.  **Verification**: The listener verifies the event's authenticity.
 5.  **Mint**: The listener submits a transaction to a smart contract on the destination chain, authorizing it to mint an equivalent amount of "wrapped" tokens for the user.
 
-This script simulates the critical off-chain **Event Listener/Relayer** component (steps 3, 4, and 5). It continuously polls the source chain for `TokensLocked` events, and upon detection, it prepares and simulates the submission of a `mint` transaction to the destination chain.
+This script simulates the critical off-chain **Event Listener/Relayer** component (steps 3-5). It continuously polls the source chain for `TokensLocked` events and, upon detection, prepares and simulates the submission of a `mint` transaction to the destination chain.
 
 ## Code Architecture
 
@@ -34,7 +34,7 @@ The listener operates in a continuous loop, performing the following steps:
 
 1.  **Initialization**: The `CrossChainBridgeListener` is instantiated. It sets up logging, initializes `ChainConnector` instances for both the source and destination chains, and prepares the `RelayerEventHandler`.
 
-2.  **Get Block Range**: In each loop iteration, the listener gets the latest block number from the source chain. It then defines a block range to scan, starting from `last_processed_block + 1` up to the current head (or a configured limit to avoid overwhelming the RPC node).
+2.  **Get Block Range**: In each loop iteration, the listener fetches the latest block number from the source chain. It then defines a block range to scan, starting from `last_processed_block + 1` up to the current head (or a configured limit to avoid overwhelming the RPC node).
 
 3.  **Event Query**: It uses the `source_connector` to query the defined block range for any `TokensLocked` events from the source bridge contract.
 
@@ -72,6 +72,7 @@ To run the simulation, follow these steps:
             "name": "Ethereum_Sepolia",
             "rpc_url": "https://rpc.sepolia.org",
             "contract_address": "0x...", # Your source bridge contract address
+            # NOTE: You will also need the contract's ABI in the config.
             ...
         },
         "destination_chain": {

@@ -1,6 +1,6 @@
-# Core Engine: Cross-Chain Bridge Event Listener
+# Cross-Chain Bridge Event Listener Simulation
 
-This project is a Python-based simulation of a core component for a cross-chain bridge: the Event Listener and Relayer. It is designed to monitor events on a source blockchain (e.g., Ethereum) and trigger corresponding actions on a destination blockchain (e.g., Polygon).
+This project is a Python-based simulation of a crucial component for a cross-chain bridge: the Event Listener and Relayer. It is designed to monitor events on a source blockchain (e.g., Ethereum) and trigger corresponding actions on a destination blockchain (e.g., Polygon).
 
 ## Concept
 
@@ -49,7 +49,7 @@ The listener operates in a continuous loop, performing the following steps:
     - It builds the raw `mint` transaction for the destination chain's contract, including all necessary parameters like the nonce, gas fees, and function arguments.
     - **Simulation**: Instead of signing and sending the transaction (which would require a funded private key), the script prints the fully formed transaction object to the console.
 
-6.  **State Update**: After processing the events in the block range, the listener updates its `last_processed_block` state to the last block number it scanned. This ensures the next loop iteration starts from the correct position.
+6.  **State Update**: After scanning a block range, the listener updates its `last_processed_block` state. This ensures the next loop iteration resumes from the correct position.
 
 7.  **Wait**: The listener then pauses for a configured interval (`run_interval_seconds`) before starting the loop again.
 
@@ -63,26 +63,25 @@ To run the simulation, follow these steps:
     ```
 
 2.  **Configure the script:**
-    Open `script.py` and modify the `CONFIG` dictionary with your desired RPC endpoints, contract addresses, and relayer wallet address.
+    Open `script.py` and modify the `CONFIG` dictionary with your desired RPC endpoints, contract addresses, contract ABIs, and relayer wallet address.
 
     ```python
-    # In script.py
+    # Example configuration in script.py
     CONFIG = {
         "source_chain": {
             "name": "Ethereum_Sepolia",
             "rpc_url": "https://rpc.sepolia.org",
-            "contract_address": "0x...", # Your source bridge contract address
-            # NOTE: You will also need the contract's ABI in the config.
-            ...
+            "contract_address": "0x...",      # Your source bridge contract address
+            "contract_abi": [...]             # The ABI JSON for the source contract
         },
         "destination_chain": {
             "name": "Polygon_Mumbai",
             "rpc_url": "https://rpc-mumbai.maticvigil.com",
-            "contract_address": "0x...", # Your destination bridge contract address
-            "relayer_wallet": "0xYourRelayerWalletAddress", # The address that will send the mint transaction
-            ...
+            "contract_address": "0x...",      # Your destination bridge contract address
+            "contract_abi": [...],            # The ABI JSON for the destination contract
+            "relayer_wallet": "0xYourRelayerWalletAddress" # Address that will send the mint tx
         },
-        ...
+        # ... other config options
     }
     ```
 
